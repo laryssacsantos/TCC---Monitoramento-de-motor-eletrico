@@ -5,7 +5,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <math.h>
-
+// maun
 // Configurações da rede WiFi
 #define WIFI_SSID "L"
 #define WIFI_PASSWORD "llm404050501212"
