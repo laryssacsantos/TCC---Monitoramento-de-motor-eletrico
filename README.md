@@ -1,0 +1,1 @@
+# TCC---Monitoramento-de-motor-eletrico
