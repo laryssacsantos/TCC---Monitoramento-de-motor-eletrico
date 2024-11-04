@@ -20,7 +20,7 @@ O objetivo deste trabalho é desenvolver uma solução de **manutenção prediti
 - `TCC---Monitoramento-de-motor-eletrico /`: Código-fonte do projeto.
 - `docs/`: Versões TCC.
 - `README.md`: Este arquivo, explicando o conteúdo do repositório.
-- - `Script Google Sheerts/`: Script Google Sheets.
+- `Script Google Sheerts/`: Script Google Sheets.
 
 ## Tecnologias Utilizadas
 
