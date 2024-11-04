@@ -13,7 +13,7 @@ O objetivo deste trabalho é desenvolver uma solução de **manutenção prediti
 - **Laryssa Santos** 
 - **Julia Buso** - 
 - **Felipe Torres** - 
-- **José William Rodrigues Pereira** - Orientador
+- **José William Rodrigues Pereira** - Orientador - jose.pereira@ifsp.edu.br
 
 ## Estrutura do Repositório
 
