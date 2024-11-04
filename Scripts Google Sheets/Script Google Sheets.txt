@@ -1,0 +1,63 @@
+function doPost(e) {
+  var data = JSON.parse(e.postData.contents);
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  
+  // Atualiza os cabeçalhos para incluir apenas dois sensores de temperatura
+  var headers = ["Magnitude", "X", "Y", "Z", "Temperature1", "Temperature2"];
+
+  // Cria uma nova aba para os dados se não existir
+  var dataSheet = spreadsheet.getSheetByName("Data");
+  if (!dataSheet) {
+    dataSheet = spreadsheet.insertSheet("Data");
+    dataSheet.appendRow(["Timestamp", "Magnitude", "X", "Y", "Z", "Temperature1", "Temperature2"]);
+  }
+
+  // Adiciona os dados na aba "Data"
+  var currentDateTime = new Date();
+  var formattedDateTime = Utilities.formatDate(currentDateTime, Session.getScriptTimeZone(), "dd/MM/yyyy HH:mm:ss");
+  var newData = [formattedDateTime];
+  for (var i = 0; i < headers.length; i++) {
+    newData.push(data[headers[i].toLowerCase()]);
+  }
+  dataSheet.appendRow(newData);
+
+  // Verifica se as abas existem e as cria se necessário
+  for (var i = 0; i < headers.length; i++) {
+    var header = headers[i];
+    if (!spreadsheet.getSheetByName(header)) {
+      spreadsheet.insertSheet(header);
+    }
+  }
+
+  // Adiciona os dados e ajusta os gráficos para cada aba
+  for (var i = 0; i < headers.length; i++) {
+    var header = headers[i];
+    var sheet = spreadsheet.getSheetByName(header);
+    var lastRow = sheet.getLastRow();
+    var newData = [[formattedDateTime, data[header.toLowerCase()]]];
+    sheet.getRange(lastRow + 1, 1, 1, 2).setValues(newData);
+
+    // Mantém apenas as últimas 10 linhas de dados na planilha
+    if (lastRow >= 10) {
+      sheet.deleteRows(1, lastRow - 9);
+    }
+
+    // Atualiza o intervalo de dados do gráfico
+    var chart = sheet.getCharts()[0]; // Assume que há apenas um gráfico na aba
+    if (chart) {
+      var chartRange = sheet.getRange(1, 1, Math.min(10, lastRow + 1), 2);
+      chart = chart.modify().removeRange(chart.getRanges()[0]).addRange(chartRange).build();
+      sheet.updateChart(chart);
+    } else {
+      var chartRange = sheet.getRange(1, 1, Math.min(10, lastRow + 1), 2);
+      var chartBuilder = sheet.newChart()
+        .setChartType(Charts.ChartType.LINE)
+        .addRange(chartRange)
+        .setPosition(1, 3, 0, 0)
+        .build();
+      sheet.insertChart(chartBuilder);
+    }
+  }
+
+  return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
+}
